@@ -163,10 +163,18 @@
 
         loadImages();
 
+        // FIX: Only reload if the width of the screen changes, not the height. 
+        // This stops the mobile address bar from breaking the scroll!
+        let currentWidth = window.innerWidth;
         let rt;
         window.addEventListener('resize', () => {
             clearTimeout(rt);
-            rt = setTimeout(() => location.reload(), 200);
+            rt = setTimeout(() => {
+                if (window.innerWidth !== currentWidth) {
+                    currentWidth = window.innerWidth;
+                    location.reload();
+                }
+            }, 200);
         });
     </script>
 </body>
