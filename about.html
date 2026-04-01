@@ -15,13 +15,14 @@
 
         body {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Navbar stays identical to index.html */
+        /* Navbar: Matching index.html */
         nav {
             display: flex;
             justify-content: space-between;
@@ -37,6 +38,7 @@
             text-decoration: none;
             color: var(--text-color);
             font-weight: 500;
+            transition: opacity 0.2s;
         }
 
         .nav-left a { font-size: 1.2rem; font-weight: 700; }
@@ -46,25 +48,24 @@
         /* About Layout */
         .about-container {
             max-width: 1200px;
-            margin: 60px auto;
+            margin: 80px auto;
             display: flex;
-            gap: 80px;
+            gap: 100px;
             padding: 0 40px;
             align-items: flex-start;
         }
 
-        /* Left Side: Image */
+        /* Left Side: Image/Art */
         .about-image {
             flex: 1;
             position: sticky;
-            top: 120px;
+            top: 140px;
         }
 
         .about-image img {
             width: 100%;
             height: auto;
             display: block;
-            filter: grayscale(20%); /* Optional: fits the minimalist vibe */
         }
 
         /* Right Side: Bio */
@@ -73,38 +74,31 @@
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-top: 0;
-            margin-bottom: 1.5rem;
-            letter-spacing: -1px;
-        }
-
-        .bio-lead {
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             color: var(--accent-color);
         }
 
         .bio-body p {
-            margin-bottom: 1.5rem;
-            font-size: 1.05rem;
+            margin-bottom: 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 400;
         }
 
-        .contact-link {
+        .contact-email {
             display: inline-block;
-            margin-top: 2rem;
-            padding: 12px 24px;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: background 0.3s;
+            margin-top: 1rem;
+            color: var(--text-color);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            font-weight: 500;
         }
 
-        .contact-link:hover {
-            background: #444;
+        .contact-email:hover {
+            opacity: 0.6;
         }
 
         /* Responsive */
@@ -115,7 +109,7 @@
                 margin: 20px auto;
             }
             .about-image { position: static; }
-            h1 { font-size: 2rem; }
+            .about-text { width: 100%; }
         }
     </style>
 </head>
@@ -127,40 +121,43 @@
         </div>
         <div class="nav-right">
             <a href="index.html">Selected Work</a>
-            <a href="about.html">About</a>
-            <a href="mailto:YOUR_EMAIL@GMAIL.COM"><i class="fa-solid fa-envelope"></i></a>
-            <a href="https://www.linkedin.com/in/YOUR_PROFILE" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="about.html" style="opacity: 0.5;">About</a>
+            <a href="mailto:YOUR_EMAIL@GMAIL.COM" title="Email"><i class="fa-solid fa-envelope"></i></a>
+            <a href="https://www.linkedin.com/in/YOUR_PROFILE" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
         </div>
     </nav>
 
     <main class="about-container">
         <section class="about-image">
-            <img src="images/portrait.webp" alt="Jordan Hilliard Profile/Art">
+            <img src="images/portrait.webp" alt="Jordan Hilliard Portfolio Art">
         </section>
 
         <section class="about-text">
-            <h1>Jordan Hilliard</h1>
-            <p class="bio-lead">Environmental Design • 3D Design • Illustration</p>
+            <h1>Bio</h1>
             
             <div class="bio-body">
                 <p>
-                    Based in Vancouver, I am a designer driven by the intersection of digital precision and organic expression. 
-                    With a background spanning Environmental Design and 3D Art, I focus on creating immersive visual 
-                    narratives that bridge the gap between architectural space and digital abstraction.
+                    Jordan Hilliard is a designer and artist living and working in Vancouver, British Columbia. 
+                    His practice spans environmental design, 3D visualization, and digital illustration.
                 </p>
                 <p>
-                    My practice is a constant exploration of tools. Whether I am manipulating 3D environments with 
-                    KitBash3D or experimenting with old-school analog techniques, my goal remains the same: 
-                    to find new ways of seeing using technology as my canvas while respecting the tactile 
-                    roots of traditional art.
+                    Currently working independently on a range of visual projects, Jordan provides design 
+                    consultancy for clients in Vancouver and abroad. His work is characterized by a 
+                    deep curiosity for emerging technologies and a commitment to exploring new 
+                    methods of digital production.
                 </p>
                 <p>
-                    I’ve previously worked at the center of the design community, managing digital spaces 
-                    and beta-testing unified 3D platforms. Today, I leverage that technical insight 
-                    to help clients bring complex projects to life.
+                    Jordan’s approach is informed by the natural environment of the Pacific Northwest 
+                    as much as the contemporary digital landscape. He puts great emphasis on the 
+                    intersection of technical precision and the tactile qualities of old-school, analog 
+                    artistic methods.
+                </p>
+                <p>
+                    Jordan is available by request for consulting services and commissioned work. 
+                    For more information, please enquire via email.
                 </p>
 
-                <a href="mailto:YOUR_EMAIL@GMAIL.COM" class="contact-link">Get in touch</a>
+                <a href="mailto:YOUR_EMAIL@GMAIL.COM" class="contact-email">Enquire via Email</a>
             </div>
         </section>
     </main>
