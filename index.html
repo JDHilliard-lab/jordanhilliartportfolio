@@ -6,15 +6,24 @@
     <title>Jordan Hilliard | Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; } /* Prevents padding from breaking layout */
+        /* GLOBAL RESET */
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased;
+        }
+        * { box-sizing: border-box; }
+
         :root {
-            --spacing: 20px;
+            --spacing: 15px;
             --bg-color: #ffffff;
             --text-color: #1a1a1a;
+            --nav-height: 100px;
         }
 
         body {
-            margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -25,44 +34,49 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 40px;
+            height: var(--nav-height);
+            padding: 0 40px;
             position: sticky;
             top: 0;
             background: white;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .nav-left a, .nav-right a {
             text-decoration: none;
             color: var(--text-color);
             font-weight: 700;
-            font-size: 1rem; /* Fixed size to prevent jitter */
+            font-size: 1rem;
         }
 
         .nav-left a { font-size: 1.2rem; }
         .nav-right { display: flex; gap: 25px; align-items: center; }
         .nav-right a:hover { opacity: 0.5; }
 
-        /* Grid Logic */
+        /* EQUAL ROW GRID */
         #work-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); 
+            display: flex;
+            flex-wrap: wrap;
             gap: var(--spacing);
-            padding: 0 var(--spacing) var(--spacing) var(--spacing);
+            padding: var(--spacing);
             max-width: 2400px;
             margin: 0 auto;
-            align-items: end;
         }
 
         .project-item {
+            flex: 1 1 calc(33.333% - var(--spacing)); 
+            max-width: calc(33.333% - var(--spacing));
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            display: flex; 
+            align-items: center;
         }
 
         .project-item img {
             width: 100%;
-            height: auto;
+            height: 25vw; /* Keeps the row height identical */
+            object-fit: cover; 
             display: block;
         }
 
@@ -73,18 +87,23 @@
 
         /* MOBILE FIXES */
         @media (max-width: 1000px) {
-            #work-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 700px) { 
-            #work-grid { grid-template-columns: 1fr; }
-            nav { 
-                padding: 20px; 
-                flex-direction: row; /* Keeps it on one line for mobile */
-                justify-content: space-between;
+            .project-item { 
+                flex: 1 1 calc(50% - var(--spacing)); 
+                max-width: calc(50% - var(--spacing)); 
             }
+            .project-item img { height: 40vw; }
+        }
+
+        @media (max-width: 700px) { 
+            nav { padding: 0 20px; height: 80px; }
             .nav-left a { font-size: 1rem; }
             .nav-right { gap: 15px; }
             .nav-right a { font-size: 0.85rem; }
+            .project-item { 
+                flex: 1 1 100%; 
+                max-width: 100%; 
+            }
+            .project-item img { height: auto; } 
         }
     </style>
 </head>
