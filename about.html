@@ -6,17 +6,19 @@
     <title>About | Jordan Hilliard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* GLOBAL RESET */
+        html, body { margin: 0; padding: 0; width: 100%; overflow-x: hidden; -webkit-font-smoothing: antialiased;}
         * { box-sizing: border-box; }
+
         :root {
-            --spacing: 40px;
             --bg-color: #ffffff;
             --text-color: #1a1a1a;
             --accent-color: #666;
+            --nav-height: 100px;
         }
 
         body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.7;
@@ -27,11 +29,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 40px;
+            height: var(--nav-height);
+            padding: 0 40px;
             position: sticky;
             top: 0;
             background: white;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .nav-left a, .nav-right a {
@@ -43,12 +46,11 @@
 
         .nav-left a { font-size: 1.2rem; }
         .nav-right { display: flex; gap: 25px; align-items: center; }
-        .nav-right a:hover { opacity: 0.5; }
 
-        /* About Layout */
+        /* ABOUT LAYOUT */
         .about-container {
             max-width: 1200px;
-            margin: 80px auto;
+            margin: 60px auto;
             display: flex;
             gap: 100px;
             padding: 0 40px;
@@ -71,18 +73,13 @@
         .bio-body p { margin-bottom: 1.8rem; font-size: 1.1rem; }
         .contact-email { color: var(--text-color); text-decoration: underline; font-weight: 500; }
 
-        /* SYNCED MOBILE FIXES */
         @media (max-width: 900px) {
-            .about-container { flex-direction: column; gap: 40px; margin: 20px auto; }
+            .about-container { flex-direction: column; gap: 40px; margin: 40px auto; }
             .about-image { position: static; }
         }
 
         @media (max-width: 700px) { 
-            nav { 
-                padding: 20px; 
-                flex-direction: row; 
-                justify-content: space-between;
-            }
+            nav { padding: 0 20px; height: 80px; }
             .nav-left a { font-size: 1rem; }
             .nav-right { gap: 15px; }
             .nav-right a { font-size: 0.85rem; }
@@ -95,7 +92,7 @@
         <div class="nav-right">
             <a href="index.html">Work</a>
             <a href="about.html">About</a>
-            <a href="mailto:jordanhilliard@gmail.om"><i class="fa-solid fa-envelope"></i></a>
+            <a href="mailto:jordanhilliard@gmail.com"><i class="fa-solid fa-envelope"></i></a>
             <a href="https://www.linkedin.com/in/jordan-hilliard-50a4322/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
         </div>
     </nav>
@@ -109,7 +106,7 @@
                 <p>Currently working independently on a range of visual projects, Jordan provides design consultancy for clients in Vancouver and abroad. His work is characterized by a deep curiosity for emerging technologies and a commitment to exploring new methods of digital production.</p>
                 <p>Jordan’s approach is informed by the natural environment of the Pacific Northwest as much as the contemporary digital landscape. He puts great emphasis on the intersection of technical precision and the tactile qualities of old-school, analog artistic methods.</p>
                 <p>Jordan is available by request for consulting services and commissioned work. For more information, please enquire via email.</p>
-                <a href="mailto:jordanhilliard@gmailcom" class="contact-email">Enquire via Email</a>
+                <a href="mailto:jordanhilliard@gmail.com" class="contact-email">Enquire via Email</a>
             </div>
         </section>
     </main>
