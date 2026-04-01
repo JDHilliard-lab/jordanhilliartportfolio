@@ -1,0 +1,44 @@
+<div id="work-grid"></div>
+
+<script>
+    const username = 'YOUR_GITHUB_USERNAME';
+    const repo = 'YOUR_REPO_NAME';
+    
+    async function loadImages() {
+        const grid = document.getElementById('work-grid');
+        
+        try {
+            const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images`);
+            const files = await response.json();
+
+            // Sorts files numerically (001, 002, 003...)
+            files.sort((a, b) => a.name.localeCompare(b.name));
+
+            files.forEach(file => {
+                // Only looks for .webp files
+                if (file.name.toLowerCase().endsWith('.webp')) {
+                    const container = document.createElement('div');
+                    
+                    // Formatting the Title: Removes "001_" and changes "_" to spaces
+                    const displayName = file.name
+                        .split('.')[0]              // Remove .webp
+                        .replace(/^\d+_/, '')      // Remove leading numbers & underscore (e.g., 001_)
+                        .replace(/_/g, ' ');        // Change remaining underscores to spaces
+
+                    container.innerHTML = `
+                        <div class="project">
+                            <img src="${file.download_url}" alt="${displayName}" loading="lazy">
+                        </div>
+                        <div class="project-label">${displayName}</div>
+                    `;
+                    grid.appendChild(container);
+                }
+            });
+        } catch (error) {
+            console.error("Error loading images:", error);
+            grid.innerHTML = "<p>Check GitHub API settings or image folder path.</p>";
+        }
+    }
+
+    loadImages();
+</script>
