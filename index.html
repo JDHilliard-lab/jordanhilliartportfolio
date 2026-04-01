@@ -42,42 +42,52 @@
         .nav-right { display: flex; gap: 25px; align-items: center; }
         .nav-right a:hover { opacity: 0.6; }
 
-        /* The Grid */
+        /* The Masonry Grid (Updated from Grid to Columns) */
         #work-grid {
-            display: grid;
-            /* Creates 3 columns on medium screens, 4 on large screens */
-            grid-template-columns: repeat(auto-fill, minmax(24%, 1fr)); 
-            gap: var(--spacing);
+            column-count: 3; /* Desktop: 3 Columns */
+            column-gap: var(--spacing);
             padding: 0 var(--spacing) var(--spacing) var(--spacing);
+            max-width: 100%;
+            margin: 0 auto;
         }
 
         .project-item {
-            opacity: 0; /* Hidden by default for fade-in */
+            display: inline-block; /* Required for masonry flow */
+            width: 100%;
+            margin-bottom: var(--spacing); /* Equal vertical spacing */
+            opacity: 0; /* Hidden for fade-in */
             transform: translateY(20px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            aspect-ratio: 1 / 1; /* Makes them square, or remove this for 'masonry' style */
-            overflow: hidden;
             background: #f9f9f9;
         }
 
-        /* Dynamic Image Fit */
+        /* Dynamic Image Fit: No cropping, scales to width */
         .project-item img {
             width: 100%;
-            height: 100%;
-            object-fit: cover; /* This makes different sized images fill the box perfectly */
+            height: auto;
             display: block;
         }
 
-        /* Fade-in Class triggered by JS */
+        /* Fade-in Class */
         .project-item.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Responsive: 2 columns on mobile */
-        @media (max-width: 800px) {
-            #work-grid { grid-template-columns: repeat(auto-fill, minmax(45%, 1fr)); }
-            nav { padding: 20px; flex-direction: column; gap: 15px; }
+        /* Responsive: Adjust columns for smaller screens */
+        @media (max-width: 1000px) {
+            #work-grid { column-count: 2; }
+        }
+
+        @media (max-width: 600px) {
+            #work-grid { column-count: 1; }
+            nav { 
+                padding: 20px; 
+                flex-direction: column; 
+                gap: 15px; 
+                text-align: center;
+            }
+            .nav-right { gap: 15px; }
         }
     </style>
 </head>
@@ -91,7 +101,7 @@
             <a href="index.html">Selected Work</a>
             <a href="about.html">About</a>
             <a href="mailto:YOUR_EMAIL@GMAIL.COM"><i class="fa-solid fa-envelope"></i></a>
-            <a href="YOUR_LINKEDIN_URL" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://www.linkedin.com/in/YOUR_PROFILE" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
         </div>
     </nav>
 
@@ -118,14 +128,13 @@
                         div.innerHTML = `<img src="${file.download_url}" loading="lazy">`;
                         grid.appendChild(div);
                         
-                        // Trigger fade-in observer
+                        // Observe for fade-in
                         observer.observe(div);
                     }
                 });
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error("Error loading images:", e); }
         }
 
-        // Intersection Observer for the Scroll Fade-In Effect
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
