@@ -6,6 +6,7 @@
     <title>About | Jordan Hilliard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        * { box-sizing: border-box; }
         :root {
             --spacing: 40px;
             --bg-color: #ffffff;
@@ -19,10 +20,9 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.7;
-            -webkit-font-smoothing: antialiased;
         }
 
-        /* Navbar: Matching index.html */
+        /* SYNCED NAVBAR */
         nav {
             display: flex;
             justify-content: space-between;
@@ -37,11 +37,11 @@
         .nav-left a, .nav-right a {
             text-decoration: none;
             color: var(--text-color);
-            font-weight: 500;
-            transition: opacity 0.2s;
+            font-weight: 700;
+            font-size: 1rem;
         }
 
-        .nav-left a { font-size: 1.2rem; font-weight: 700; }
+        .nav-left a { font-size: 1.2rem; }
         .nav-right { display: flex; gap: 25px; align-items: center; }
         .nav-right a:hover { opacity: 0.5; }
 
@@ -55,23 +55,9 @@
             align-items: flex-start;
         }
 
-        /* Left Side: Image/Art */
-        .about-image {
-            flex: 1;
-            position: sticky;
-            top: 140px;
-        }
-
-        .about-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Right Side: Bio */
-        .about-text {
-            flex: 1.2;
-        }
+        .about-image { flex: 1; position: sticky; top: 140px; }
+        .about-image img { width: 100%; height: auto; display: block; }
+        .about-text { flex: 1.2; }
 
         h1 {
             font-size: 0.85rem;
@@ -82,85 +68,50 @@
             color: var(--accent-color);
         }
 
-        .bio-body p {
-            margin-bottom: 1.8rem;
-            font-size: 1.1rem;
-            font-weight: 400;
-        }
+        .bio-body p { margin-bottom: 1.8rem; font-size: 1.1rem; }
+        .contact-email { color: var(--text-color); text-decoration: underline; font-weight: 500; }
 
-        .contact-email {
-            display: inline-block;
-            margin-top: 1rem;
-            color: var(--text-color);
-            text-decoration: underline;
-            text-underline-offset: 4px;
-            font-weight: 500;
-        }
-
-        .contact-email:hover {
-            opacity: 0.6;
-        }
-
-        /* Responsive */
+        /* SYNCED MOBILE FIXES */
         @media (max-width: 900px) {
-            .about-container {
-                flex-direction: column;
-                gap: 40px;
-                margin: 20px auto;
-            }
+            .about-container { flex-direction: column; gap: 40px; margin: 20px auto; }
             .about-image { position: static; }
-            .about-text { width: 100%; }
+        }
+
+        @media (max-width: 700px) { 
+            nav { 
+                padding: 20px; 
+                flex-direction: row; 
+                justify-content: space-between;
+            }
+            .nav-left a { font-size: 1rem; }
+            .nav-right { gap: 15px; }
+            .nav-right a { font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
-
     <nav>
-        <div class="nav-left">
-            <a href="index.html">Jordan Hilliard</a>
-        </div>
+        <div class="nav-left"><a href="index.html">Jordan Hilliard</a></div>
         <div class="nav-right">
-            <a href="index.html">Selected Work</a>
-            <a href="about.html" style="opacity: 0.5;">About</a>
-            <a href="mailto:YOUR_EMAIL@GMAIL.COM" title="Email"><i class="fa-solid fa-envelope"></i></a>
-            <a href="https://www.linkedin.com/in/YOUR_PROFILE" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="index.html">Work</a>
+            <a href="about.html">About</a>
+            <a href="mailto:YOUR_EMAIL@GMAIL.COM"><i class="fa-solid fa-envelope"></i></a>
+            <a href="https://www.linkedin.com/in/YOUR_PROFILE" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
         </div>
     </nav>
 
     <main class="about-container">
-        <section class="about-image">
-            <img src="images/portrait.webp" alt="Jordan Hilliard Portfolio Art">
-        </section>
-
+        <section class="about-image"><img src="images/portrait.webp" alt="Jordan Hilliard"></section>
         <section class="about-text">
             <h1>Bio</h1>
-            
             <div class="bio-body">
-                <p>
-                    Jordan Hilliard is a designer and artist living and working in Vancouver, British Columbia. 
-                    His practice spans environmental design, 3D visualization, and digital illustration.
-                </p>
-                <p>
-                    Currently working independently on a range of visual projects, Jordan provides design 
-                    consultancy for clients in Vancouver and abroad. His work is characterized by a 
-                    deep curiosity for emerging technologies and a commitment to exploring new 
-                    methods of digital production.
-                </p>
-                <p>
-                    Jordan’s approach is informed by the natural environment of the Pacific Northwest 
-                    as much as the contemporary digital landscape. He puts great emphasis on the 
-                    intersection of technical precision and the tactile qualities of old-school, analog 
-                    artistic methods.
-                </p>
-                <p>
-                    Jordan is available by request for consulting services and commissioned work. 
-                    For more information, please enquire via email.
-                </p>
-
+                <p>Jordan Hilliard is a designer and artist living and working in Vancouver, British Columbia. His practice spans environmental design, 3D visualization, and digital illustration.</p>
+                <p>Currently working independently on a range of visual projects, Jordan provides design consultancy for clients in Vancouver and abroad. His work is characterized by a deep curiosity for emerging technologies and a commitment to exploring new methods of digital production.</p>
+                <p>Jordan’s approach is informed by the natural environment of the Pacific Northwest as much as the contemporary digital landscape. He puts great emphasis on the intersection of technical precision and the tactile qualities of old-school, analog artistic methods.</p>
+                <p>Jordan is available by request for consulting services and commissioned work. For more information, please enquire via email.</p>
                 <a href="mailto:YOUR_EMAIL@GMAIL.COM" class="contact-email">Enquire via Email</a>
             </div>
         </section>
     </main>
-
 </body>
 </html>
