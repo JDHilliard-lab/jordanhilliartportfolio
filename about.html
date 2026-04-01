@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Jordan Hilliard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --spacing: 40px;
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --accent-color: #666;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Navbar stays identical to index.html */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+        }
+
+        .nav-left a, .nav-right a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .nav-left a { font-size: 1.2rem; font-weight: 700; }
+        .nav-right { display: flex; gap: 25px; align-items: center; }
+        .nav-right a:hover { opacity: 0.5; }
+
+        /* About Layout */
+        .about-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            display: flex;
+            gap: 80px;
+            padding: 0 40px;
+            align-items: flex-start;
+        }
+
+        /* Left Side: Image */
+        .about-image {
+            flex: 1;
+            position: sticky;
+            top: 120px;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(20%); /* Optional: fits the minimalist vibe */
+        }
+
+        /* Right Side: Bio */
+        .about-text {
+            flex: 1.2;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .bio-lead {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+        }
+
+        .bio-body p {
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .contact-link {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 12px 24px;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .contact-link:hover {
+            background: #444;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .about-container {
+                flex-direction: column;
+                gap: 40px;
+                margin: 20px auto;
+            }
+            .about-image { position: static; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-left">
+            <a href="index.html">Jordan Hilliard</a>
+        </div>
+        <div class="nav-right">
+            <a href="index.html">Selected Work</a>
+            <a href="about.html">About</a>
+            <a href="mailto:YOUR_EMAIL@GMAIL.COM"><i class="fa-solid fa-envelope"></i></a>
+            <a href="https://www.linkedin.com/in/YOUR_PROFILE" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+        </div>
+    </nav>
+
+    <main class="about-container">
+        <section class="about-image">
+            <img src="images/portrait.webp" alt="Jordan Hilliard Profile/Art">
+        </section>
+
+        <section class="about-text">
+            <h1>Jordan Hilliard</h1>
+            <p class="bio-lead">Environmental Design • 3D Design • Illustration</p>
+            
+            <div class="bio-body">
+                <p>
+                    Based in Vancouver, I am a designer driven by the intersection of digital precision and organic expression. 
+                    With a background spanning Environmental Design and 3D Art, I focus on creating immersive visual 
+                    narratives that bridge the gap between architectural space and digital abstraction.
+                </p>
+                <p>
+                    My practice is a constant exploration of tools. Whether I am manipulating 3D environments with 
+                    KitBash3D or experimenting with old-school analog techniques, my goal remains the same: 
+                    to find new ways of seeing using technology as my canvas while respecting the tactile 
+                    roots of traditional art.
+                </p>
+                <p>
+                    I’ve previously worked at the center of the design community, managing digital spaces 
+                    and beta-testing unified 3D platforms. Today, I leverage that technical insight 
+                    to help clients bring complex projects to life.
+                </p>
+
+                <a href="mailto:YOUR_EMAIL@GMAIL.COM" class="contact-link">Get in touch</a>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
