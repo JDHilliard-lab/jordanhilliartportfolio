@@ -148,7 +148,6 @@
             background: white;
             width: 90%;
             max-width: 1000px;
-            /* Fallback for older browsers, overridden below */
             max-height: 90vh; 
             overflow-y: auto; 
             border-radius: 8px;
@@ -178,13 +177,12 @@
 
         /* Inside the Modal */
         .modal-body {
-            /* Desktop padding: top padding increased to safely clear the X button */
             padding: 50px 40px 40px 40px;
         }
 
         .modal-body h2 { margin-top: 0; font-size: 2rem; }
         .modal-body p { line-height: 1.6; font-size: 1.1rem; color: #444; margin-bottom: 30px;}
-        .modal-body img { width: 100%; height: auto; border-radius: 4px; margin-bottom: 20px;}
+        .modal-body img, .modal-body video { width: 100%; height: auto; border-radius: 4px; margin-bottom: 20px; display: block;}
 
         /* RESPONSIVE MOBILE FIXES */
         @media (max-width: 700px) { 
@@ -193,14 +191,12 @@
             .nav-right { gap: 15px; }
             .nav-right a { font-size: 0.85rem; }
             
-            /* Uses Dynamic Viewport Height (dvh) so the mobile search bar doesn't cut off the top */
             .modal-content { 
                 width: 95%; 
-                max-height: 85vh; /* Fallback */
+                max-height: 85vh; 
                 max-height: 85dvh; 
             }
             
-            /* Pushes the text down 70px from the top so the X button NEVER covers it */
             .modal-body { padding: 70px 20px 20px 20px; } 
         }
     </style>
@@ -282,7 +278,7 @@
                 targetFolder = 'bts_ey'; 
             }
 
-            // --- THE FOLDER DROP AUTOMATION ---
+            // --- THE MIXED MEDIA FOLDER DROP AUTOMATION ---
             let autoImagesHtml = '';
             
             if (targetFolder !== '') {
@@ -293,8 +289,21 @@
                     files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
 
                     files.forEach(file => {
-                        if (file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                        const lowerName = file.name.toLowerCase();
+                        
+                        // IF IT IS AN IMAGE OR GIF:
+                        if (lowerName.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
                             autoImagesHtml += `<img src="${file.download_url}" alt="${file.name}">`;
+                        }
+                        // IF IT IS A VIDEO:
+                        else if (lowerName.match(/\.(mp4|webm)$/i)) {
+                            // Creates a silent, looping video that acts exactly like an image layout-wise
+                            autoImagesHtml += `
+                                <video autoplay loop muted playsinline>
+                                    <source src="${file.download_url}" type="video/${lowerName.split('.').pop()}">
+                                    Your browser does not support the video tag.
+                                </video>
+                            `;
                         }
                     });
                 } catch (e) {
