@@ -62,17 +62,16 @@
             margin: 0 auto;
         }
 
-        /* INVISIBLE SHIELD: This stops the very last row from stretching massively out of proportion if there are only 1 or 2 images left in it! */
         #portfolio-main::after {
             content: "";
             flex-grow: 999999999;
         }
 
         .project-item {
+            position: relative; 
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            /* Flex-grow and Flex-basis will be injected dynamically by JS */
         }
 
         .project-item img {
@@ -86,12 +85,102 @@
             transform: translateY(0);
         }
 
+        /* --- THE HOVER/CENTER CUE (+) --- */
+        .hover-cue {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 26, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none; 
+            backdrop-filter: blur(4px);
+        }
+
+        @media (hover: hover) {
+            .project-item.has-modal { cursor: pointer; }
+            .project-item.has-modal:hover .hover-cue { opacity: 1; }
+            .project-item.has-modal:hover img { opacity: 0.9; } 
+        }
+
+        @media (hover: none) {
+            .project-item.has-modal.center-focus .hover-cue { opacity: 1; }
+        }
+
+        /* --- THE POP-UP MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh; 
+            overflow-y: auto; 
+            border-radius: 8px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: #1a1a1a;
+            cursor: pointer;
+            z-index: 10;
+            background: white;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Inside the Modal */
+        .modal-body {
+            padding: 40px;
+        }
+
+        .modal-body h2 { margin-top: 0; font-size: 2rem; }
+        .modal-body p { line-height: 1.6; font-size: 1.1rem; color: #444; margin-bottom: 30px;}
+        .modal-body img { width: 100%; height: auto; border-radius: 4px; margin-bottom: 20px;}
+
         /* RESPONSIVE */
         @media (max-width: 700px) { 
             nav { padding: 0 20px; height: 80px; }
             .nav-left a { font-size: 1rem; }
             .nav-right { gap: 15px; }
             .nav-right a { font-size: 0.85rem; }
+            .modal-content { width: 95%; max-height: 95vh; }
+            .modal-body { padding: 20px; }
         }
     </style>
 </head>
@@ -108,29 +197,112 @@
 
     <main id="portfolio-main"></main>
 
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="close-btn" id="close-modal">&times;</div>
+            <div class="modal-body" id="modal-content-area">
+                </div>
+        </div>
+    </div>
+
     <script>
         const username = 'JDHilliard-lab';
         const repo = 'jordanhilliartportfolio';
-
-        // Set how tall you roughly want your rows to be. 
-        // 350px on desktop, 200px on mobile so they stack nicely.
         const targetRowHeight = window.innerWidth <= 700 ? 200 : 350;
 
+        // --- DEFINE WHICH IMAGES GET A MODAL ---
+        const projectsWithBreakdowns = [
+            '002_Ford_BuildingSixSculpture.webp', // <--- Your new file trigger
+            'ey_002.webp' 
+        ];
+
+        // --- MODAL LOGIC & FOLDER FETCHING ---
+        const modalOverlay = document.getElementById('project-modal');
+        const modalContentArea = document.getElementById('modal-content-area');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        async function openModal(filename) {
+            // Show a quick loading message while it fetches your folder
+            modalContentArea.innerHTML = '<h2>Loading project details...</h2>';
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+
+            let textContent = '';
+            let targetFolder = '';
+
+            // --- PROJECT 1: FORD SCULPTURE ---
+            if (filename === '002_Ford_BuildingSixSculpture.webp') {
+                textContent = `
+                    <h2>Ford HQ: Building Six Sculpture</h2>
+                    <p><strong>Role:</strong> Concept Designer</p>
+                    <p>Concept design for a spatial sculpture installed at Ford's "Building Six" engineering hub. Because the facility houses advanced testing equipment, the form language was directly inspired by the mechanical energy and physical components of the dyno motors tested inside.</p>
+                `;
+                // Tells the code exactly which folder to look inside
+                targetFolder = 'Ford_DDL_Sculpture'; 
+            } 
+            
+            // --- PROJECT 2: EY ---
+            else if (filename === 'ey_002.webp') {
+                textContent = `
+                    <h2>EY Corporate Pitch</h2>
+                    <p><strong>Role:</strong> 3D Visualization Lead</p>
+                    <p>Initial milestone tracking and look-dev presentations.</p>
+                `;
+                targetFolder = 'bts_ey'; 
+            }
+
+            // --- THE FOLDER DROP AUTOMATION ---
+            let autoImagesHtml = '';
+            
+            if (targetFolder !== '') {
+                try {
+                    // This asks GitHub: "What is inside this specific folder?"
+                    const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images/${targetFolder}`);
+                    const files = await response.json();
+                    
+                    // Sort them chronologically (Page_01, Page_02, etc.)
+                    files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+
+                    // Loop through the presentation pages and turn them into images
+                    files.forEach(file => {
+                        if (file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                            autoImagesHtml += `<img src="${file.download_url}" alt="${file.name}">`;
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Could not load the folder. Check if the folder name is correct!", e);
+                }
+            }
+
+            // Render the text and the auto-generated images together
+            modalContentArea.innerHTML = textContent + autoImagesHtml;
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto'; 
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // --- MAIN GALLERY LOGIC ---
         async function loadImages() {
             try {
                 const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images`);
                 const files = await response.json();
                 
-                // 1. Sort files chronologically (001, 002, etc.)
                 files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
 
-                // 2. Filter out non-webps and portraits
                 const webpFiles = files.filter(f => 
                     f.name.toLowerCase().endsWith('.webp') && 
                     f.name.toLowerCase() !== 'portrait.webp'
                 );
 
-                // 3. Group files by project (so Ford stays near Ford)
                 const groups = { 'Ford': [], 'Aloft': [], 'EY': [], 'Other Work': [] };
                 webpFiles.forEach(file => {
                     const lowerName = file.name.toLowerCase();
@@ -140,7 +312,6 @@
                     else { groups['Other Work'].push(file); }
                 });
 
-                // 4. Flatten the groups back into ONE master list so they can blend at the edges
                 const masterList = [
                     ...groups['Ford'], 
                     ...groups['Aloft'], 
@@ -150,37 +321,52 @@
 
                 const mainContainer = document.getElementById('portfolio-main');
 
-                // 5. Render them all into the single fluid grid
                 masterList.forEach((file) => {
                     const div = document.createElement('div');
                     div.className = 'project-item';
                     
-                    const img = document.createElement('img');
-                    img.src = file.download_url;
-                    img.alt = file.name;
+                    if (projectsWithBreakdowns.includes(file.name)) {
+                        div.classList.add('has-modal');
+                        div.innerHTML = `
+                            <img src="${file.download_url}" alt="${file.name}">
+                            <div class="hover-cue"><i class="fa-solid fa-plus"></i> Info</div>
+                        `;
+                        div.addEventListener('click', () => openModal(file.name));
+                        centerObserver.observe(div); 
+                    } else {
+                        div.innerHTML = `<img src="${file.download_url}" alt="${file.name}">`;
+                    }
 
-                    // THE MATH TRICK: When the image loads, calculate its aspect ratio and size the box perfectly
+                    const img = div.querySelector('img');
                     img.onload = function() {
                         const aspectRatio = img.naturalWidth / img.naturalHeight;
                         div.style.flexGrow = aspectRatio;
                         div.style.flexBasis = (targetRowHeight * aspectRatio) + 'px';
                     };
 
-                    div.appendChild(img);
                     mainContainer.appendChild(div);
-                    observer.observe(div);
+                    visibilityObserver.observe(div);
                 });
 
             } catch (e) { console.error(e); }
         }
 
-        const observer = new IntersectionObserver((entries) => {
+        const visibilityObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
         }, { threshold: 0.1 });
 
+        const centerObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('center-focus');
+                } else {
+                    entry.target.classList.remove('center-focus');
+                }
+            });
+        }, { rootMargin: "-40% 0px -40% 0px" });
+
         loadImages();
 
-        // Mobile address bar & desktop resize fix
         let currentWidth = window.innerWidth;
         let rt;
         window.addEventListener('resize', () => {
