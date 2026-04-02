@@ -20,6 +20,7 @@
             --bg-color: #ffffff;
             --text-color: #1a1a1a;
             --nav-height: 100px;
+            --row-height: 450px; /* This controls how tall the image rows are on Desktop */
         }
 
         body {
@@ -52,52 +53,44 @@
         .nav-right { display: flex; gap: 25px; align-items: center; }
         .nav-right a:hover { opacity: 0.5; }
 
-        /* --- NEW GROUPING STYLES --- */
+        /* --- THE FLUID ROW GALLERY --- */
         #portfolio-main {
             max-width: 2400px;
             margin: 0 auto;
-            padding-bottom: 60px;
+            padding: 0 var(--spacing) 60px var(--spacing);
         }
 
+        /* Creates a visual break between different projects instead of using text */
         .group-section {
-            margin-bottom: 60px; /* Space between different projects */
+            margin-bottom: 80px; 
         }
 
-        .group-title {
-            padding: 0 var(--spacing);
-            font-size: 1.5rem;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #555; /* Slightly muted text for the project titles */
-        }
-
-        /* REVERTED TO LEFT-TO-RIGHT FLEXBOX */
         .work-container {
             display: flex;
-            flex-direction: row;
+            flex-wrap: wrap;
             gap: var(--spacing);
-            padding: 0 var(--spacing);
         }
 
-        .column {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing);
-            flex: 1;
-            min-width: 0;
+        /* Invisible trick: Stops the last row from stretching massively if there are only 1 or 2 images left */
+        .work-container::after {
+            content: "";
+            flex-grow: 10;
         }
 
         .project-item {
+            flex-grow: 1;
+            flex-shrink: 1;
+            height: var(--row-height);
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            min-width: 15%; /* Prevents images from getting crushed too thin */
         }
 
         .project-item img {
             width: 100%;
-            height: auto; 
+            height: 100%;
+            object-fit: cover; /* Ensures flush edges */
             display: block;
         }
 
@@ -106,13 +99,17 @@
             transform: translateY(0);
         }
 
-        /* RESPONSIVE */
+        /* RESPONSIVE: Shrink the row height on smaller screens */
+        @media (max-width: 1000px) {
+            :root { --row-height: 300px; } 
+        }
+
         @media (max-width: 700px) { 
+            :root { --row-height: 250px; } 
             nav { padding: 0 20px; height: 80px; }
             .nav-left a { font-size: 1rem; }
             .nav-right { gap: 15px; }
             .nav-right a { font-size: 0.85rem; }
-            .group-title { font-size: 1.2rem; margin-top: 20px;}
         }
     </style>
 </head>
@@ -138,7 +135,7 @@
                 const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images`);
                 const files = await response.json();
                 
-                // Sort files to maintain your 001, 002 order
+                // Sort files numerically left-to-right
                 files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
 
                 // FILTER: Only .webp files AND NOT portrait.webp
@@ -147,69 +144,41 @@
                     f.name.toLowerCase() !== 'portrait.webp'
                 );
 
-                // --- NEW: GROUP THE FILES BY PROJECT NAME ---
+                // --- GROUP FILES BY PROJECT (No Text Titles) ---
                 const groups = {};
                 webpFiles.forEach(file => {
                     const lowerName = file.name.toLowerCase();
-                    let groupName = 'Other Work'; // Fallback if no tag matches
+                    let groupName = 'Other Work'; 
 
-                    // Add your project tags here! 
+                    // Add your project tags here just like before
                     if (lowerName.includes('ford')) { groupName = 'Ford'; }
                     else if (lowerName.includes('aloft')) { groupName = 'Aloft'; }
                     else if (lowerName.includes('ey')) { groupName = 'EY'; }
-                    // Example: else if (lowerName.includes('kitbash')) { groupName = 'KitBash3D'; }
 
-                    // Create the array for the group if it doesn't exist yet
                     if (!groups[groupName]) { groups[groupName] = []; }
                     groups[groupName].push(file);
                 });
 
-                const getColCount = () => {
-                    if (window.innerWidth <= 700) return 1;
-                    if (window.innerWidth <= 1000) return 2;
-                    return 3;
-                };
-
-                const columnCount = getColCount();
                 const mainContainer = document.getElementById('portfolio-main');
 
-                // --- RENDER EACH GROUP ---
+                // --- RENDER EACH GROUP AS A FLUID BLOCK ---
                 for (const [groupName, groupFiles] of Object.entries(groups)) {
                     
-                    // 1. Create the Section and Title
                     const section = document.createElement('div');
-                    section.className = 'group-section';
+                    section.className = 'group-section'; // This adds the invisible space between projects
                     
-                    const title = document.createElement('h2');
-                    title.className = 'group-title';
-                    title.textContent = groupName;
-                    section.appendChild(title);
-
-                    // 2. Create the Grid and Columns for this specific project
                     const grid = document.createElement('div');
                     grid.className = 'work-container';
                     
-                    const columns = [];
-                    for (let i = 0; i < columnCount; i++) {
-                        const col = document.createElement('div');
-                        col.className = 'column';
-                        columns.push(col);
-                        grid.appendChild(col);
-                    }
-
-                    // 3. Deal the images left-to-right into the columns
-                    groupFiles.forEach((file, index) => {
+                    groupFiles.forEach((file) => {
                         const div = document.createElement('div');
                         div.className = 'project-item';
                         div.innerHTML = `<img src="${file.download_url}" alt="${file.name}">`;
                         
-                        const targetCol = index % columnCount;
-                        columns[targetCol].appendChild(div);
-                        
+                        grid.appendChild(div);
                         observer.observe(div);
                     });
 
-                    // 4. Put it all together on the page
                     section.appendChild(grid);
                     mainContainer.appendChild(section);
                 }
@@ -223,7 +192,7 @@
 
         loadImages();
 
-        // Kept your mobile address bar fix!
+        // Kept the mobile address bar fix so your phone doesn't freeze!
         let currentWidth = window.innerWidth;
         let rt;
         window.addEventListener('resize', () => {
