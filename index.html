@@ -212,7 +212,8 @@
 
         // --- DEFINE WHICH IMAGES GET A MODAL ---
         const projectsWithBreakdowns = [
-            '002_Ford_BuildingSixSculpture.webp', // <--- Your new file trigger
+            '002_Ford_BuildingSixSculpture.webp', 
+            '006_Ford_Wallcovering.webp', // <--- Your new Wallcovering trigger added here!
             'ey_002.webp' 
         ];
 
@@ -237,11 +238,20 @@
                     <p><strong>Role:</strong> Concept Designer</p>
                     <p>Concept design for a spatial sculpture installed at Ford's "Building Six" engineering hub. Because the facility houses advanced testing equipment, the form language was directly inspired by the mechanical energy and physical components of the dyno motors tested inside.</p>
                 `;
-                // Tells the code exactly which folder to look inside
                 targetFolder = 'Ford_DDL_Sculpture'; 
             } 
             
-            // --- PROJECT 2: EY ---
+            // --- PROJECT 2: FORD TALENT WALL (NEW) ---
+            else if (filename === '006_Ford_Wallcovering.webp') {
+                textContent = `
+                    <h2>Ford HQ: Building Six Talent Wall</h2>
+                    <p><strong>Role:</strong> Environmental Graphic Designer</p>
+                    <p>Designed for the new employee onboarding center in Building Six. This EGD timeline eases new-hire anxiety while highlighting future goals, combining bold branded graphics with dimensional objects to create an inspiring, playful narrative.</p>
+                `;
+                targetFolder = 'Ford_B6_Talentwall'; 
+            }
+
+            // --- PROJECT 3: EY ---
             else if (filename === 'ey_002.webp') {
                 textContent = `
                     <h2>EY Corporate Pitch</h2>
@@ -260,7 +270,7 @@
                     const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images/${targetFolder}`);
                     const files = await response.json();
                     
-                    // Sort them chronologically (Page_01, Page_02, etc.)
+                    // Sort them chronologically
                     files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
 
                     // Loop through the presentation pages and turn them into images
