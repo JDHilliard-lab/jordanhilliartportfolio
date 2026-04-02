@@ -20,7 +20,7 @@
             --bg-color: #ffffff;
             --text-color: #1a1a1a;
             --nav-height: 100px;
-            --row-height: 450px; /* This controls how tall the image rows are on Desktop */
+            --row-height: 450px; 
         }
 
         body {
@@ -60,9 +60,9 @@
             padding: 0 var(--spacing) 60px var(--spacing);
         }
 
-        /* Creates a visual break between different projects instead of using text */
+        /* Removed the large gap. Groups now sit close together. */
         .group-section {
-            margin-bottom: 80px; 
+            margin-bottom: var(--spacing); 
         }
 
         .work-container {
@@ -71,7 +71,7 @@
             gap: var(--spacing);
         }
 
-        /* Invisible trick: Stops the last row from stretching massively if there are only 1 or 2 images left */
+        /* Prevents the last row from stretching too wide */
         .work-container::after {
             content: "";
             flex-grow: 10;
@@ -83,14 +83,20 @@
             height: var(--row-height);
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            min-width: 15%; /* Prevents images from getting crushed too thin */
+            /* Added background-color to the transition for a smooth fade-in */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out, background-color 0.5s ease;
+            min-width: 15%; 
+            background-color: #f0f0f0; /* Default fallback color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .project-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ensures flush edges */
+            /* NO CROPPING. Image scales to fit inside the box. */
+            object-fit: contain; 
             display: block;
         }
 
@@ -99,9 +105,9 @@
             transform: translateY(0);
         }
 
-        /* RESPONSIVE: Shrink the row height on smaller screens */
+        /* RESPONSIVE */
         @media (max-width: 1000px) {
-            :root { --row-height: 300px; } 
+            :root { --row-height: 350px; } 
         }
 
         @media (max-width: 700px) { 
@@ -135,7 +141,7 @@
                 const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images`);
                 const files = await response.json();
                 
-                // Sort files numerically left-to-right
+                // Sort files numerically
                 files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
 
                 // FILTER: Only .webp files AND NOT portrait.webp
@@ -144,13 +150,11 @@
                     f.name.toLowerCase() !== 'portrait.webp'
                 );
 
-                // --- GROUP FILES BY PROJECT (No Text Titles) ---
                 const groups = {};
                 webpFiles.forEach(file => {
                     const lowerName = file.name.toLowerCase();
                     let groupName = 'Other Work'; 
 
-                    // Add your project tags here just like before
                     if (lowerName.includes('ford')) { groupName = 'Ford'; }
                     else if (lowerName.includes('aloft')) { groupName = 'Aloft'; }
                     else if (lowerName.includes('ey')) { groupName = 'EY'; }
@@ -161,11 +165,10 @@
 
                 const mainContainer = document.getElementById('portfolio-main');
 
-                // --- RENDER EACH GROUP AS A FLUID BLOCK ---
                 for (const [groupName, groupFiles] of Object.entries(groups)) {
                     
                     const section = document.createElement('div');
-                    section.className = 'group-section'; // This adds the invisible space between projects
+                    section.className = 'group-section'; 
                     
                     const grid = document.createElement('div');
                     grid.className = 'work-container';
@@ -173,8 +176,31 @@
                     groupFiles.forEach((file) => {
                         const div = document.createElement('div');
                         div.className = 'project-item';
-                        div.innerHTML = `<img src="${file.download_url}" alt="${file.name}">`;
                         
+                        // Create the image element dynamically
+                        const img = document.createElement('img');
+                        img.crossOrigin = "Anonymous"; // Allows us to read the image colors
+                        img.src = file.download_url;
+                        img.alt = file.name;
+
+                        // THE MAGIC TRICK: Once the image loads, grab its average color
+                        img.onload = function() {
+                            try {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = 1;
+                                canvas.height = 1;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, 1, 1);
+                                const data = ctx.getImageData(0, 0, 1, 1).data;
+                                // Set the background to a slightly softened version of the image's average color
+                                div.style.backgroundColor = `rgba(${data[0]}, ${data[1]}, ${data[2]}, 0.8)`;
+                            } catch (e) {
+                                // Failsafe: if GitHub blocks the color read, it just stays the default gray
+                                console.warn("Color read blocked by browser security.", e);
+                            }
+                        };
+
+                        div.appendChild(img);
                         grid.appendChild(div);
                         observer.observe(div);
                     });
@@ -192,7 +218,7 @@
 
         loadImages();
 
-        // Kept the mobile address bar fix so your phone doesn't freeze!
+        // Kept the mobile resize fix!
         let currentWidth = window.innerWidth;
         let rt;
         window.addEventListener('resize', () => {
