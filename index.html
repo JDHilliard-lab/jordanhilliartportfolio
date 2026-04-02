@@ -90,39 +90,34 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            /* Centers the icon perfectly */
             transform: translate(-50%, -50%) scale(1);
             color: white;
-            font-size: 3.5rem; /* Makes it nice and big */
+            font-size: 3.5rem;
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none; 
-            /* Soft, deep dropshadow for contrast against any image */
             text-shadow: 0px 4px 25px rgba(0, 0, 0, 0.7);
         }
 
-        /* The Elastic Snap Animation Math */
         @keyframes elasticSnap {
             0%   { transform: translate(-50%, -50%) scale(1); }
-            10%  { transform: translate(-50%, -50%) scale(1.4); } /* Pop out */
-            25%  { transform: translate(-50%, -50%) scale(0.9); } /* Snap back */
-            40%  { transform: translate(-50%, -50%) scale(1.1); } /* Mini bounce */
-            55%  { transform: translate(-50%, -50%) scale(1); }   /* Settle */
-            100% { transform: translate(-50%, -50%) scale(1); }   /* Rest before looping */
+            10%  { transform: translate(-50%, -50%) scale(1.4); } 
+            25%  { transform: translate(-50%, -50%) scale(0.9); } 
+            40%  { transform: translate(-50%, -50%) scale(1.1); } 
+            55%  { transform: translate(-50%, -50%) scale(1); }   
+            100% { transform: translate(-50%, -50%) scale(1); }   
         }
 
         @media (hover: hover) {
             .project-item.has-modal { cursor: pointer; }
-            /* Triggers visibility AND the looping animation on hover */
             .project-item.has-modal:hover .hover-cue { 
                 opacity: 1; 
                 animation: elasticSnap 2s infinite; 
             }
-            .project-item.has-modal:hover img { opacity: 0.85; } /* Dims image slightly to make + pop more */
+            .project-item.has-modal:hover img { opacity: 0.85; } 
         }
 
         @media (hover: none) {
-            /* Triggers visibility AND the looping animation when center screen on mobile */
             .project-item.has-modal.center-focus .hover-cue { 
                 opacity: 1; 
                 animation: elasticSnap 2s infinite;
@@ -153,6 +148,7 @@
             background: white;
             width: 90%;
             max-width: 1000px;
+            /* Fallback for older browsers, overridden below */
             max-height: 90vh; 
             overflow-y: auto; 
             border-radius: 8px;
@@ -167,8 +163,8 @@
 
         .close-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             font-size: 2rem;
             color: #1a1a1a;
             cursor: pointer;
@@ -182,21 +178,30 @@
 
         /* Inside the Modal */
         .modal-body {
-            padding: 40px;
+            /* Desktop padding: top padding increased to safely clear the X button */
+            padding: 50px 40px 40px 40px;
         }
 
         .modal-body h2 { margin-top: 0; font-size: 2rem; }
         .modal-body p { line-height: 1.6; font-size: 1.1rem; color: #444; margin-bottom: 30px;}
         .modal-body img { width: 100%; height: auto; border-radius: 4px; margin-bottom: 20px;}
 
-        /* RESPONSIVE */
+        /* RESPONSIVE MOBILE FIXES */
         @media (max-width: 700px) { 
             nav { padding: 0 20px; height: 80px; }
             .nav-left a { font-size: 1rem; }
             .nav-right { gap: 15px; }
             .nav-right a { font-size: 0.85rem; }
-            .modal-content { width: 95%; max-height: 95vh; }
-            .modal-body { padding: 20px; }
+            
+            /* Uses Dynamic Viewport Height (dvh) so the mobile search bar doesn't cut off the top */
+            .modal-content { 
+                width: 95%; 
+                max-height: 85vh; /* Fallback */
+                max-height: 85dvh; 
+            }
+            
+            /* Pushes the text down 70px from the top so the X button NEVER covers it */
+            .modal-body { padding: 70px 20px 20px 20px; } 
         }
     </style>
 </head>
@@ -349,7 +354,6 @@
                     
                     if (projectsWithBreakdowns.includes(file.name)) {
                         div.classList.add('has-modal');
-                        // Removed the "Info" text, just left the icon!
                         div.innerHTML = `
                             <img src="${file.download_url}" alt="${file.name}">
                             <div class="hover-cue"><i class="fa-solid fa-plus"></i></div>
