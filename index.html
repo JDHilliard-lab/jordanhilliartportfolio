@@ -52,25 +52,18 @@
         .nav-right { display: flex; gap: 25px; align-items: center; }
         .nav-right a:hover { opacity: 0.5; }
 
-        /* THE OFFSET MASONRY CONTAINER */
+        /* THE CSS NATIVE MASONRY CONTAINER */
         #work-container {
-            display: flex;
-            flex-direction: row;
-            gap: var(--spacing);
+            column-count: 3;
+            column-gap: var(--spacing);
             padding: 0 var(--spacing) var(--spacing) var(--spacing);
             max-width: 2400px;
             margin: 0 auto;
         }
 
-        .column {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing);
-            flex: 1;
-            min-width: 0;
-        }
-
         .project-item {
+            break-inside: avoid; /* Stops images from cutting in half across columns */
+            margin-bottom: var(--spacing);
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -89,11 +82,11 @@
 
         /* RESPONSIVE */
         @media (max-width: 1000px) {
-            #col-2 { display: none; }
+            #work-container { column-count: 2; }
         }
 
         @media (max-width: 700px) { 
-            #col-1 { display: none; }
+            #work-container { column-count: 1; }
             nav { padding: 0 20px; height: 80px; }
             .nav-left a { font-size: 1rem; }
             .nav-right { gap: 15px; }
@@ -113,10 +106,7 @@
     </nav>
 
     <main id="work-container">
-        <div class="column" id="col-0"></div>
-        <div class="column" id="col-1"></div>
-        <div class="column" id="col-2"></div>
-    </main>
+        </main>
 
     <script>
         const username = 'JDHilliard-lab';
@@ -135,21 +125,12 @@
                     f.name.toLowerCase() !== 'portrait.webp'
                 );
 
-                const getColCount = () => {
-                    if (window.innerWidth <= 700) return 1;
-                    if (window.innerWidth <= 1000) return 2;
-                    return 3;
-                };
-
-                const columnCount = getColCount();
-
-                webpFiles.forEach((file, index) => {
+                webpFiles.forEach((file) => {
                     const div = document.createElement('div');
                     div.className = 'project-item';
                     div.innerHTML = `<img src="${file.download_url}" alt="${file.name}">`;
                     
-                    const targetCol = index % columnCount;
-                    document.getElementById(`col-${targetCol}`).appendChild(div);
+                    document.getElementById('work-container').appendChild(div);
                     
                     observer.observe(div);
                 });
@@ -161,20 +142,6 @@
         }, { threshold: 0.1 });
 
         loadImages();
-
-        // FIX: Only reload if the width of the screen changes, not the height. 
-        // This stops the mobile address bar from breaking the scroll!
-        let currentWidth = window.innerWidth;
-        let rt;
-        window.addEventListener('resize', () => {
-            clearTimeout(rt);
-            rt = setTimeout(() => {
-                if (window.innerWidth !== currentWidth) {
-                    currentWidth = window.innerWidth;
-                    location.reload();
-                }
-            }, 200);
-        });
     </script>
 </body>
 </html>
