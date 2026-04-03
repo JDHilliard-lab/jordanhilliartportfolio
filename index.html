@@ -232,6 +232,7 @@
             '001_Ford_BuildingSixSculpture.webp', 
             '006_Ford_Wallcovering.webp', 
             'ey_002.webp' 
+            '006_Ford_art.webp'
         ];
 
         // --- MODAL LOGIC & FOLDER FETCHING ---
@@ -257,8 +258,17 @@
                 `;
                 targetFolder = 'Ford_DDL_Sculpture'; 
             } 
+                  // --- PROJECT 2: FORD shelby animated gif ---
+            if (filename === '006_Ford_art.webp') { 
+                textContent = `
+                    <h2>Ford HQ: Building Six Sculpture</h2>
+                    <p><strong>Role:</strong> Concept Designer</p>
+                    <p>Concept design for a spatial sculpture installed at Ford's "Building Six" engineering hub. Because the facility houses advanced testing equipment, the form language was directly inspired by the mechanical energy and physical components of the dyno motors tested inside.</p>
+                `;
+                targetFolder = 'Ford_Shelby'; 
+            } 
             
-            // --- PROJECT 2: FORD TALENT WALL ---
+            // --- PROJECT 3: FORD TALENT WALL ---
             else if (filename === '006_Ford_Wallcovering.webp') {
                 textContent = `
                     <h2>Ford HQ: Building Six Talent Wall</h2>
