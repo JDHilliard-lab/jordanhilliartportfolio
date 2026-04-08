@@ -1,0 +1,26 @@
+{
+  "001_Ford_BuildingSixSculpture.webp": {
+    "title": "Ford HQ: Building Six Sculpture",
+    "role": "Concept Designer",
+    "desc": "Concept design for a spatial sculpture installed at Ford's \"Building Six\" engineering hub. Because the facility houses advanced testing equipment, the form language was directly inspired by the mechanical energy and physical components of the dyno motors tested inside.",
+    "folder": "Ford_DDL_Sculpture"
+  },
+  "006_Ford_art.webp": {
+    "title": "Ford Archives Remix",
+    "role": "Graphic Designer",
+    "desc": "A creative exploration of Ford's rich history. I was given access to the historical photography vault to remix and reimagine classic archival imagery, applying modern graphic design treatments to breathe new life into vintage assets.",
+    "folder": "Ford_Shelby"
+  },
+  "006_Ford_Wallcovering.webp": {
+    "title": "Ford HQ: Building Six Talent Wall",
+    "role": "Environmental Graphic Designer",
+    "desc": "Designed for the new employee onboarding center in Building Six. This EGD timeline eases new-hire anxiety while highlighting future goals, combining bold branded graphics with dimensional objects to create an inspiring, playful narrative.",
+    "folder": "Ford_B6_Talentwall"
+  },
+  "ey_002.webp": {
+    "title": "EY Corporate Pitch",
+    "role": "3D Visualization Lead",
+    "desc": "Initial milestone tracking and look-dev presentations.",
+    "folder": "bts_ey"
+  }
+}
