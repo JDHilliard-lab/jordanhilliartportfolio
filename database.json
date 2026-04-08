@@ -16,11 +16,20 @@
     "role": "Environmental Graphic Designer",
     "desc": "Designed for the new employee onboarding center in Building 6 in Dearborn, Michigan. This EGD timeline eases new-hire anxiety while highlighting future goals, combining bold branded graphics with dimensional objects to create an inspiring, playful narrative.",
     "folder": "Ford_B6_Talentwall"
+    
+     },
+  "004_Ford_Wallcovering.webp": {
+    "title": "Ford EGD",
+    "role": "Graphic Designer",
+    "desc": "My role centered on developing a comprehensive Environmental Graphic Design (EGD) system to unify the workplace environment across corridors, meeting rooms, and other public areas.",
+    "folder": "Ford_EGD_Guide"
   },
   "ey_002.webp": {
     "title": "EY Corporate Pitch",
     "role": "3D Visualization Lead",
     "desc": "Initial milestone tracking and look-dev presentations.",
     "folder": "bts_ey"
+   
+ 
   }
 }
