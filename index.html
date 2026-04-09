@@ -8,7 +8,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
     
     <style>
         /* GLOBAL RESET */
@@ -22,92 +22,99 @@
 
         :root {
             --spacing: 15px;
-            --bg-color: #ffffff;
+            --bg-color: #ffffff; /* Grid background */
             --text-color: #1a1a1a;
             --nav-height: 100px;
         }
 
         body {
-            /* Updated to use the new premium font */
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
         }
 
-        /* SYNCED NAVBAR */
+        /* --- THE FLOATING NAVBAR --- */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: var(--nav-height);
-            padding: 0 40px;
-            position: sticky;
+            padding: 0 50px;
+            /* Changed to absolute so it sits ON TOP of the video */
+            position: absolute;
             top: 0;
-            background: white;
+            width: 100%;
+            background: transparent;
             z-index: 1000;
         }
 
+        /* Nav links are now white to contrast with the dark video */
         .nav-left a, .nav-right a {
             text-decoration: none;
-            color: var(--text-color);
-            font-weight: 700;
+            color: #ffffff; 
+            font-weight: 400;
             font-size: 0.9rem;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        .nav-left a { font-size: 1.1rem; }
-        .nav-right { display: flex; gap: 25px; align-items: center; }
-        .nav-right a:hover { opacity: 0.5; }
+        .nav-left a { font-size: 1.1rem; letter-spacing: 2px;}
+        .nav-right { display: flex; gap: 30px; align-items: center; }
+        .nav-right a:hover { opacity: 0.6; }
 
-        /* --- THE NEW STRUCTURED HERO SECTION --- */
+        /* --- THE FULL-SCREEN HERO SECTION --- */
         .hero-section {
+            position: relative;
             width: 100%;
-            padding: 60px 40px;
+            height: 100vh; /* Exactly 1 screen tall */
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: var(--bg-color); 
+            align-items: center; /* Vertically centered */
+            justify-content: flex-start; /* Left aligned */
+            padding-left: 8%; /* Indents the text nicely */
+            background: #000; 
             margin-bottom: var(--spacing);
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover; 
+            z-index: 1;
+        }
+
+        /* The Dark Gradient Tint (darker on the left behind the text) */
+        .hero-tint {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
+            z-index: 2;
         }
 
         .hero-text {
-            text-align: center;
-            max-width: 900px;
-            margin-bottom: 50px;
+            position: relative;
+            z-index: 10;
+            color: white;
+            max-width: 800px;
         }
 
         .hero-text h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin: 0 0 15px 0;
-            letter-spacing: -1px;
-            color: #111;
+            font-size: 5rem; /* Massive, cinematic size */
+            font-weight: 200; /* Ultra-thin, elegant weight */
+            line-height: 1.1;
+            margin: 0 0 20px 0;
+            letter-spacing: -2px;
         }
 
         .hero-text p {
             font-size: 1.2rem;
             line-height: 1.6;
             font-weight: 300;
-            color: #444;
+            color: rgba(255, 255, 255, 0.85);
             margin: 0;
-        }
-
-        /* The Cinematic Video Frame */
-        .hero-video-container {
-            width: 100%;
-            max-width: 1400px; /* Caps the size on huge monitors */
-            aspect-ratio: 16 / 9; /* Keeps perfect widescreen ratio */
-            background: #111;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15); /* Soft premium shadow */
-        }
-
-        .hero-video {
-            width: 100%; 
-            height: 100%;
-            object-fit: cover; 
-            display: block;
+            max-width: 600px;
         }
 
         /* --- THE JUSTIFIED ASPECT-RATIO GALLERY --- */
@@ -235,9 +242,10 @@
 
         .modal-body {
             padding: 50px 40px 40px 40px;
+            color: var(--text-color);
         }
 
-        .modal-body h2 { margin-top: 0; font-size: 2rem; font-weight: 700;}
+        .modal-body h2 { margin-top: 0; font-size: 2rem; font-weight: 600;}
         .modal-body p { line-height: 1.6; font-size: 1.1rem; color: #444; margin-bottom: 30px; font-weight: 300;}
         .modal-body img, .modal-body video { width: 100%; height: auto; border-radius: 4px; margin-bottom: 20px; display: block;}
 
@@ -248,14 +256,18 @@
             .nav-right { gap: 15px; }
             .nav-right a { font-size: 0.8rem; }
             
-            .hero-section { padding: 40px 20px; }
-            .hero-text h1 { font-size: 2.2rem; }
-            .hero-text p { font-size: 1rem; }
-
-            .hero-video-container {
-                aspect-ratio: auto;
-                height: 40vh; /* Keeps it prominent on vertical mobile screens */
+            .hero-section { 
+                padding-left: 20px; 
+                padding-right: 20px;
+                /* Ensures it perfectly fills mobile browsers */
+                height: 100vh; 
+                height: 100dvh; 
             }
+            /* Darken the whole mobile video so text is readable everywhere */
+            .hero-tint { background: rgba(0,0,0,0.5); }
+            
+            .hero-text h1 { font-size: 3rem; }
+            .hero-text p { font-size: 1rem; }
 
             .modal-content { 
                 width: 95%; 
@@ -278,15 +290,13 @@
     </nav>
 
     <header class="hero-section">
+        <video class="hero-video" autoplay loop muted playsinline>
+            <source src="videos/Jordan_Hilliard_Portfolio.mp4" type="video/mp4">
+        </video>
+        <div class="hero-tint"></div>
         <div class="hero-text">
-            <h1>Dynamic Art for Inspired Spaces</h1>
+            <h1>Dynamic Art<br>for Inspired Spaces</h1>
             <p>Your art adviser for immersive design, creating site-specific art, bespoke illustrations, and 3D sculptures for hospitality, corporate, and healthcare spaces.</p>
-        </div>
-        
-        <div class="hero-video-container">
-            <video class="hero-video" autoplay loop muted playsinline>
-                <source src="videos/Jordan_Hilliard_Portfolio.mp4" type="video/mp4">
-            </video>
         </div>
     </header>
 
