@@ -14,7 +14,7 @@
         /* GLOBAL RESET & SMOOTH SCROLL */
         html {
             scroll-behavior: smooth;
-            overflow-y: scroll; 
+            /* REMOVED overflow-y: scroll; to fix the mobile scroll lock bug! */
         }
         
         html, body { 
@@ -130,6 +130,9 @@
             z-index: 10;
             color: white;
             max-width: 900px;
+            /* HARDWARE ACCELERATION TRICK: Forces iOS to render this layer on top of the noise blend mode */
+            -webkit-transform: translateZ(1px);
+            transform: translateZ(1px);
         }
 
         .hero-text h1 {
@@ -139,7 +142,6 @@
             margin: 0 0 25px 0;
             letter-spacing: -1.5px;
             max-width: 800px;
-            text-wrap: balance; /* Naturally creates the beautiful line breaks */
         }
 
         .hero-text p {
@@ -315,15 +317,22 @@
                 margin: 0 auto;
             }
             
+            /* Removes the manual line breaks on mobile so text flows naturally */
+            .hero-text h1 br {
+                display: none;
+            }
+            
             .hero-text h1 { 
                 font-size: 2.8rem; 
                 line-height: 1.15; 
-                text-wrap: balance; 
+                /* Forces a beautiful, symmetrical wrap on mobile screens */
+                max-width: 340px;
+                margin: 0 auto 20px auto;
             }
             
             .hero-text p { 
                 font-size: 1rem; 
-                text-wrap: balance; 
+                max-width: 300px; 
                 margin: 0 auto;
             }
 
@@ -350,4 +359,182 @@
         <div class="hero-tint"></div>
         <div class="hero-noise"></div>
         
-        <div
+        <div class="hero-text">
+            <h1>Environmental<br>Graphic Design &<br>Spatial Storytelling</h1>
+            <p>Creating artwork, illustration, and sculptural elements for immersive built environments.</p>
+        </div>
+
+        <div class="scroll-indicator">
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <main id="portfolio-main"></main>
+
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="close-btn" id="close-modal">&times;</div>
+            <div class="modal-body" id="modal-content-area"></div>
+        </div>
+    </div>
+
+    <script>
+        const username = 'JDHilliard-lab';
+        const repo = 'jordanhilliartportfolio';
+        const targetRowHeight = window.innerWidth <= 700 ? 200 : 350;
+
+        let projectDB = {};
+
+        const modalOverlay = document.getElementById('project-modal');
+        const modalContentArea = document.getElementById('modal-content-area');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        async function openModal(filename) {
+            const data = projectDB[filename];
+            if (!data) return; 
+
+            modalContentArea.innerHTML = '<h2>Loading project details...</h2>';
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+
+            let textContent = `
+                <h2>${data.title}</h2>
+                <p><strong>Role:</strong> ${data.role}</p>
+                <p>${data.desc}</p>
+            `;
+            
+            let autoImagesHtml = '';
+            
+            if (data.folder && data.folder !== '') {
+                try {
+                    const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images/${data.folder}`);
+                    const files = await response.json();
+                    
+                    files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+
+                    files.forEach(file => {
+                        const lowerName = file.name.toLowerCase();
+                        if (lowerName.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                            autoImagesHtml += `<img src="${file.download_url}" alt="${file.name}">`;
+                        }
+                        else if (lowerName.match(/\.(mp4|webm)$/i)) {
+                            autoImagesHtml += `
+                                <video autoplay loop muted playsinline>
+                                    <source src="${file.download_url}" type="video/${lowerName.split('.').pop()}">
+                                </video>
+                            `;
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Could not load the folder.", e);
+                }
+            }
+
+            modalContentArea.innerHTML = textContent + autoImagesHtml;
+        }
+
+        closeModalBtn.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto'; 
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        async function init() {
+            try {
+                const dbResponse = await fetch('database.json');
+                projectDB = await dbResponse.json();
+
+                const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images`);
+                const files = await response.json();
+                
+                files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+
+                const webpFiles = files.filter(f => 
+                    f.name.toLowerCase().endsWith('.webp') && 
+                    f.name.toLowerCase() !== 'portrait.webp'
+                );
+
+                const groups = { 'Ford': [], 'Aloft': [], 'EY': [], 'Other Work': [] };
+                webpFiles.forEach(file => {
+                    const lowerName = file.name.toLowerCase();
+                    if (lowerName.includes('ford')) { groups['Ford'].push(file); }
+                    else if (lowerName.includes('aloft')) { groups['Aloft'].push(file); }
+                    else if (lowerName.includes('ey')) { groups['EY'].push(file); }
+                    else { groups['Other Work'].push(file); }
+                });
+
+                const masterList = [
+                    ...groups['Ford'], 
+                    ...groups['Aloft'], 
+                    ...groups['EY'], 
+                    ...groups['Other Work']
+                ];
+
+                const mainContainer = document.getElementById('portfolio-main');
+
+                masterList.forEach((file) => {
+                    const div = document.createElement('div');
+                    div.className = 'project-item';
+                    
+                    if (projectDB[file.name]) {
+                        div.classList.add('has-modal');
+                        div.innerHTML = `
+                            <img src="${file.download_url}" alt="${file.name}">
+                            <div class="hover-cue"><i class="fa-solid fa-plus"></i></div>
+                        `;
+                        div.addEventListener('click', () => openModal(file.name));
+                        centerObserver.observe(div); 
+                    } else {
+                        div.innerHTML = `<img src="${file.download_url}" alt="${file.name}">`;
+                    }
+
+                    const img = div.querySelector('img');
+                    img.onload = function() {
+                        const aspectRatio = img.naturalWidth / img.naturalHeight;
+                        div.style.flexGrow = aspectRatio;
+                        div.style.flexBasis = (targetRowHeight * aspectRatio) + 'px';
+                    };
+
+                    mainContainer.appendChild(div);
+                    visibilityObserver.observe(div);
+                });
+
+            } catch (e) { console.error(e); }
+        }
+
+        const visibilityObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+
+        const centerObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('center-focus');
+                } else {
+                    entry.target.classList.remove('center-focus');
+                }
+            });
+        }, { rootMargin: "-40% 0px -40% 0px" });
+
+        init();
+
+        let currentWidth = window.innerWidth;
+        let rt;
+        window.addEventListener('resize', () => {
+            clearTimeout(rt);
+            rt = setTimeout(() => {
+                if (window.innerWidth !== currentWidth) {
+                    currentWidth = window.innerWidth;
+                    location.reload();
+                }
+            }, 200);
+        });
+    </script>
+</body>
+</html>
