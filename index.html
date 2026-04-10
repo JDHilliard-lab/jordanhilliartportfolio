@@ -124,7 +124,7 @@
             90% { transform: translate(2%, 2%); }
         }
 
-        /* --- THE DESKTOP TYPOGRAPHY (MATCHING SCREENSHOT) --- */
+        /* --- THE DESKTOP TYPOGRAPHY --- */
         .hero-text {
             position: relative;
             z-index: 10;
@@ -134,10 +134,12 @@
 
         .hero-text h1 {
             font-size: 5.5rem; 
-            font-weight: 200; /* Ultra-thin weight matches the screenshot */
+            font-weight: 200; 
             line-height: 1.05;
             margin: 0 0 25px 0;
             letter-spacing: -1.5px;
+            max-width: 800px;
+            text-wrap: balance; /* Naturally creates the beautiful line breaks */
         }
 
         .hero-text p {
@@ -146,7 +148,7 @@
             font-weight: 300;
             color: rgba(255, 255, 255, 0.85);
             margin: 0;
-            max-width: 550px; /* Constrains the width to match the visual wrap */
+            max-width: 550px; 
             letter-spacing: 0.5px;
         }
 
@@ -300,14 +302,30 @@
             .nav-right a { font-size: 0.75rem; }
             .nav-right i { font-size: 1.1rem; } 
             
-            .hero-section { padding-left: 20px; padding-right: 20px; height: 100vh; height: 100dvh; }
+            .hero-section { 
+                padding: 0 20px; 
+                justify-content: center; 
+                height: 100vh; 
+                height: 100dvh; 
+            }
             .hero-tint { background: rgba(0,0,0,0.5); }
             
-            .hero-text h1 { 
-                font-size: 2.8rem; /* Adjusted for the new line breaks */
-                line-height: 1.1; 
+            .hero-text { 
+                text-align: center; 
+                margin: 0 auto;
             }
-            .hero-text p { font-size: 1rem; }
+            
+            .hero-text h1 { 
+                font-size: 2.8rem; 
+                line-height: 1.15; 
+                text-wrap: balance; 
+            }
+            
+            .hero-text p { 
+                font-size: 1rem; 
+                text-wrap: balance; 
+                margin: 0 auto;
+            }
 
             .modal-content { width: 95%; max-height: 85vh; max-height: 85dvh; }
             .modal-body { padding: 70px 20px 20px 20px; } 
@@ -332,182 +350,4 @@
         <div class="hero-tint"></div>
         <div class="hero-noise"></div>
         
-        <div class="hero-text">
-            <h1>Environmental<br>Graphic Design &<br>Spatial Storytelling</h1>
-            <p>Creating artwork, illustration, and sculptural elements for immersive built environments.</p>
-        </div>
-
-        <div class="scroll-indicator">
-            <i class="fa-solid fa-chevron-down"></i>
-        </div>
-    </header>
-
-    <main id="portfolio-main"></main>
-
-    <div id="project-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="close-btn" id="close-modal">&times;</div>
-            <div class="modal-body" id="modal-content-area"></div>
-        </div>
-    </div>
-
-    <script>
-        const username = 'JDHilliard-lab';
-        const repo = 'jordanhilliartportfolio';
-        const targetRowHeight = window.innerWidth <= 700 ? 200 : 350;
-
-        let projectDB = {};
-
-        const modalOverlay = document.getElementById('project-modal');
-        const modalContentArea = document.getElementById('modal-content-area');
-        const closeModalBtn = document.getElementById('close-modal');
-
-        async function openModal(filename) {
-            const data = projectDB[filename];
-            if (!data) return; 
-
-            modalContentArea.innerHTML = '<h2>Loading project details...</h2>';
-            modalOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden'; 
-
-            let textContent = `
-                <h2>${data.title}</h2>
-                <p><strong>Role:</strong> ${data.role}</p>
-                <p>${data.desc}</p>
-            `;
-            
-            let autoImagesHtml = '';
-            
-            if (data.folder && data.folder !== '') {
-                try {
-                    const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images/${data.folder}`);
-                    const files = await response.json();
-                    
-                    files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
-
-                    files.forEach(file => {
-                        const lowerName = file.name.toLowerCase();
-                        if (lowerName.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-                            autoImagesHtml += `<img src="${file.download_url}" alt="${file.name}">`;
-                        }
-                        else if (lowerName.match(/\.(mp4|webm)$/i)) {
-                            autoImagesHtml += `
-                                <video autoplay loop muted playsinline>
-                                    <source src="${file.download_url}" type="video/${lowerName.split('.').pop()}">
-                                </video>
-                            `;
-                        }
-                    });
-                } catch (e) {
-                    console.warn("Could not load the folder.", e);
-                }
-            }
-
-            modalContentArea.innerHTML = textContent + autoImagesHtml;
-        }
-
-        closeModalBtn.addEventListener('click', () => {
-            modalOverlay.classList.remove('active');
-            document.body.style.overflow = 'auto'; 
-        });
-
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                modalOverlay.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        async function init() {
-            try {
-                const dbResponse = await fetch('database.json');
-                projectDB = await dbResponse.json();
-
-                const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/images`);
-                const files = await response.json();
-                
-                files.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
-
-                const webpFiles = files.filter(f => 
-                    f.name.toLowerCase().endsWith('.webp') && 
-                    f.name.toLowerCase() !== 'portrait.webp'
-                );
-
-                const groups = { 'Ford': [], 'Aloft': [], 'EY': [], 'Other Work': [] };
-                webpFiles.forEach(file => {
-                    const lowerName = file.name.toLowerCase();
-                    if (lowerName.includes('ford')) { groups['Ford'].push(file); }
-                    else if (lowerName.includes('aloft')) { groups['Aloft'].push(file); }
-                    else if (lowerName.includes('ey')) { groups['EY'].push(file); }
-                    else { groups['Other Work'].push(file); }
-                });
-
-                const masterList = [
-                    ...groups['Ford'], 
-                    ...groups['Aloft'], 
-                    ...groups['EY'], 
-                    ...groups['Other Work']
-                ];
-
-                const mainContainer = document.getElementById('portfolio-main');
-
-                masterList.forEach((file) => {
-                    const div = document.createElement('div');
-                    div.className = 'project-item';
-                    
-                    if (projectDB[file.name]) {
-                        div.classList.add('has-modal');
-                        div.innerHTML = `
-                            <img src="${file.download_url}" alt="${file.name}">
-                            <div class="hover-cue"><i class="fa-solid fa-plus"></i></div>
-                        `;
-                        div.addEventListener('click', () => openModal(file.name));
-                        centerObserver.observe(div); 
-                    } else {
-                        div.innerHTML = `<img src="${file.download_url}" alt="${file.name}">`;
-                    }
-
-                    const img = div.querySelector('img');
-                    img.onload = function() {
-                        const aspectRatio = img.naturalWidth / img.naturalHeight;
-                        div.style.flexGrow = aspectRatio;
-                        div.style.flexBasis = (targetRowHeight * aspectRatio) + 'px';
-                    };
-
-                    mainContainer.appendChild(div);
-                    visibilityObserver.observe(div);
-                });
-
-            } catch (e) { console.error(e); }
-        }
-
-        const visibilityObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-        }, { threshold: 0.1 });
-
-        const centerObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { 
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('center-focus');
-                } else {
-                    entry.target.classList.remove('center-focus');
-                }
-            });
-        }, { rootMargin: "-40% 0px -40% 0px" });
-
-        init();
-
-        let currentWidth = window.innerWidth;
-        let rt;
-        window.addEventListener('resize', () => {
-            clearTimeout(rt);
-            rt = setTimeout(() => {
-                if (window.innerWidth !== currentWidth) {
-                    currentWidth = window.innerWidth;
-                    location.reload();
-                }
-            }, 200);
-        });
-    </script>
-</body>
-</html>
+        <div
