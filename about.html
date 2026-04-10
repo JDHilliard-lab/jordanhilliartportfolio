@@ -8,10 +8,15 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* GLOBAL RESET */
+        html {
+            /* This single line fixes the layout shift by forcing the scrollbar track to always appear */
+            overflow-y: scroll; 
+        }
+
         html, body { 
             margin: 0; 
             padding: 0; 
@@ -30,7 +35,7 @@
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
         /* --- THE LIGHT-THEME NAVBAR --- */
@@ -41,12 +46,11 @@
             height: var(--nav-height);
             padding: 0 50px;
             background: var(--bg-color);
-            position: sticky; /* Stays at the top when scrolling */
+            position: sticky; 
             top: 0;
             z-index: 1000;
         }
 
-        /* Nav links are BLACK for the About page */
         .nav-left a, .nav-right a {
             text-decoration: none;
             color: var(--text-color); 
@@ -66,15 +70,14 @@
             display: flex;
             align-items: center;
             max-width: 1400px;
-            margin: 60px auto;
+            margin: 80px auto;
             padding: 0 50px;
-            gap: 80px; /* Space between photo and text */
+            gap: 80px; 
         }
 
-        /* Left Side: Portrait */
         .about-image {
             flex: 1;
-            max-width: 500px;
+            max-width: 450px;
         }
 
         .about-image img {
@@ -82,44 +85,34 @@
             height: auto;
             display: block;
             border-radius: 4px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08); /* Soft premium shadow */
         }
 
-        /* Right Side: Typography */
         .about-text {
             flex: 1.2;
         }
 
-        .about-text h1 {
-            font-size: 4rem;
-            font-weight: 200; /* Ultra-thin, matching the homepage vibe */
-            margin: 0 0 10px 0;
-            letter-spacing: -2px;
-            color: #000;
-        }
-
-        .about-text h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin: 0 0 30px 0;
-            color: #666; /* Slightly lighter gray for the subtitle */
+        /* Make the first paragraph act as a subtle introduction */
+        .about-text p:first-of-type {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #111;
+            margin-bottom: 30px;
+            line-height: 1.6;
         }
 
         .about-text p {
             font-size: 1.1rem;
             font-weight: 300;
-            color: #333;
+            color: #444;
             margin-bottom: 25px;
-            max-width: 600px;
+            max-width: 650px;
         }
 
         /* --- RESPONSIVE MOBILE FIXES --- */
         @media (max-width: 900px) {
             .about-container {
-                flex-direction: column; /* Stacks image on top of text on smaller screens */
-                gap: 40px;
+                flex-direction: column; 
+                gap: 50px;
                 margin: 40px auto;
             }
             .about-image {
@@ -133,9 +126,9 @@
             .nav-right { gap: 15px; }
             .nav-right a { font-size: 0.8rem; }
             
-            .about-container { padding: 0 20px; }
-            .about-text h1 { font-size: 2.8rem; }
-            .about-text h2 { font-size: 1rem; }
+            .about-container { padding: 0 20px; margin: 20px auto 60px auto;}
+            
+            .about-text p:first-of-type { font-size: 1.2rem; }
             .about-text p { font-size: 1rem; }
         }
     </style>
@@ -157,14 +150,11 @@
         </div>
         
         <div class="about-text">
-            <h1>Hi, I'm Jordan.</h1>
-            <h2>Environment & 3D Designer</h2>
+            <p>Jordan Hilliard is a designer and artist living and working in Vancouver, British Columbia. His practice spans environmental design, 3D visualization, and digital illustration.</p>
             
-            <p>I am a multidisciplinary creative driven by design, strategy, and purposeful execution. With over two decades of experience spanning both the physical and digital realms, I specialize in creating site-specific art, bespoke illustrations, and 3D sculptures.</p>
+            <p>Currently working on a range of visual projects, Jordan provides design consultancy for clients in Vancouver and abroad. His work is characterized by a deep curiosity for emerging technologies and a commitment to exploring new methods of digital production.</p>
             
-            <p>Rooted in curiosity and innovation, my work explores how art evolves through technology, transforming ideas into new forms of expression for hospitality, corporate, and healthcare spaces.</p>
-            
-            <p>Whether it's shaping the visual narrative for the Ford archives or developing immersive architectural visualizations, my goal is always to bridge the gap between compelling storytelling and striking visual design.</p>
+            <p>Jordan is available by request for consulting services and commissioned work. For more information, please enquire via email.</p>
         </div>
     </main>
 
