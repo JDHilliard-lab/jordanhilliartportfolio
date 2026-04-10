@@ -120,14 +120,30 @@
             }
         }
 
+     /* RESPONSIVE MOBILE FIXES */
         @media (max-width: 700px) { 
-            nav { padding: 0 20px; height: 80px; }
-            .nav-left a { font-size: 0.9rem; }
-            .nav-right { gap: 15px; }
-            .nav-right a { font-size: 0.8rem; }
+            /* Pushes everything closer to the screen edges to maximize center space */
+            nav { padding: 0 15px; height: 80px; }
             
+            /* Shrinks text slightly and tightens letter spacing so it takes up less room */
+            .nav-left a { font-size: 0.85rem; letter-spacing: 0.5px; }
+            
+            /* Tightens the gap between links, shrinks text, but keeps icons locked at a readable size */
+            .nav-right { gap: 12px; }
+            .nav-right a { font-size: 0.75rem; }
+            .nav-right i { font-size: 1.1rem; } 
+            
+            .hero-section { padding-left: 20px; padding-right: 20px; height: 100vh; height: 100dvh; }
+            .hero-tint { background: rgba(0,0,0,0.5); }
+            
+            .hero-text h1 { font-size: 3rem; }
+            .hero-text p { font-size: 1rem; }
+
+            .modal-content { width: 95%; max-height: 85vh; max-height: 85dvh; }
+            .modal-body { padding: 70px 20px 20px 20px; } 
+            
+            /* Specific fix for About page so we don't break its layout */
             .about-container { padding: 0 20px; margin: 20px auto 60px auto;}
-            
             .about-text p:first-of-type { font-size: 1.2rem; }
             .about-text p { font-size: 1rem; }
         }
