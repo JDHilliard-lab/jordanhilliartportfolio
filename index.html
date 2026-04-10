@@ -11,7 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* GLOBAL RESET */
+        /* GLOBAL RESET & SMOOTH SCROLL */
+        html {
+            /* This single line makes clicking anchor links (like the Work button) glide smoothly */
+            scroll-behavior: smooth;
+        }
+        
         html, body { 
             margin: 0; 
             padding: 0; 
@@ -22,7 +27,7 @@
 
         :root {
             --spacing: 15px;
-            --bg-color: #ffffff; /* Grid background */
+            --bg-color: #ffffff;
             --text-color: #1a1a1a;
             --nav-height: 100px;
         }
@@ -40,7 +45,6 @@
             align-items: center;
             height: var(--nav-height);
             padding: 0 50px;
-            /* Changed to absolute so it sits ON TOP of the video */
             position: absolute;
             top: 0;
             width: 100%;
@@ -48,7 +52,6 @@
             z-index: 1000;
         }
 
-        /* Nav links are now white to contrast with the dark video */
         .nav-left a, .nav-right a {
             text-decoration: none;
             color: #ffffff; 
@@ -56,6 +59,7 @@
             font-size: 0.9rem;
             letter-spacing: 1px;
             text-transform: uppercase;
+            transition: opacity 0.3s ease;
         }
 
         .nav-left a { font-size: 1.1rem; letter-spacing: 2px;}
@@ -66,11 +70,11 @@
         .hero-section {
             position: relative;
             width: 100%;
-            height: 100vh; /* Exactly 1 screen tall */
+            height: 100vh; 
             display: flex;
-            align-items: center; /* Vertically centered */
-            justify-content: flex-start; /* Left aligned */
-            padding-left: 8%; /* Indents the text nicely */
+            align-items: center; 
+            justify-content: flex-start; 
+            padding-left: 8%; 
             background: #000; 
             margin-bottom: var(--spacing);
             overflow: hidden;
@@ -84,13 +88,25 @@
             z-index: 1;
         }
 
-        /* The Dark Gradient Tint (darker on the left behind the text) */
         .hero-tint {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
             z-index: 2;
+        }
+
+        /* --- THE NEW NOISE FILTER --- */
+        .hero-noise {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            /* Pure CSS mathematical noise pattern so it loads instantly */
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            opacity: 0.15; /* Keeps it subtle and cinematic */
+            z-index: 3;
+            pointer-events: none; /* Ensures you can still click things underneath it */
+            mix-blend-mode: overlay; /* Blends the grain naturally with the video highlights/shadows */
         }
 
         .hero-text {
@@ -101,8 +117,8 @@
         }
 
         .hero-text h1 {
-            font-size: 5rem; /* Massive, cinematic size */
-            font-weight: 200; /* Ultra-thin, elegant weight */
+            font-size: 5rem; 
+            font-weight: 200; 
             line-height: 1.1;
             margin: 0 0 20px 0;
             letter-spacing: -2px;
@@ -117,7 +133,27 @@
             max-width: 600px;
         }
 
-        /* --- THE JUSTIFIED ASPECT-RATIO GALLERY --- */
+        /* --- THE SCROLL INDICATOR --- */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+            font-size: 1.5rem;
+            z-index: 10;
+            animation: bounceDown 2.5s infinite; /* Slow, elegant bounce loop */
+            pointer-events: none;
+        }
+
+        @keyframes bounceDown {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); opacity: 0.5; }
+            40% { transform: translate(-50%, -15px); opacity: 1; }
+            60% { transform: translate(-50%, -7px); opacity: 0.8; }
+        }
+
+        /* --- THE GALLERY --- */
+        /* Note: Added scroll-margin-top so when you click "Work", it stops right at the top of the grid perfectly */
         #portfolio-main {
             display: flex;
             flex-wrap: wrap;
@@ -125,6 +161,7 @@
             padding: 0 var(--spacing) 60px var(--spacing);
             max-width: 2400px;
             margin: 0 auto;
+            scroll-margin-top: 20px; 
         }
 
         #portfolio-main::after {
@@ -150,7 +187,7 @@
             transform: translateY(0);
         }
 
-        /* --- THE ELASTIC HOVER CUE (+) --- */
+        /* --- HOVER CUE --- */
         .hover-cue {
             position: absolute;
             top: 50%;
@@ -175,18 +212,12 @@
 
         @media (hover: hover) {
             .project-item.has-modal { cursor: pointer; }
-            .project-item.has-modal:hover .hover-cue { 
-                opacity: 1; 
-                animation: elasticSnap 2s infinite; 
-            }
+            .project-item.has-modal:hover .hover-cue { opacity: 1; animation: elasticSnap 2s infinite; }
             .project-item.has-modal:hover img { opacity: 0.85; } 
         }
 
         @media (hover: none) {
-            .project-item.has-modal.center-focus .hover-cue { 
-                opacity: 1; 
-                animation: elasticSnap 2s infinite;
-            }
+            .project-item.has-modal.center-focus .hover-cue { opacity: 1; animation: elasticSnap 2s infinite;}
         }
 
         /* --- THE POP-UP MODAL --- */
@@ -240,11 +271,7 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .modal-body {
-            padding: 50px 40px 40px 40px;
-            color: var(--text-color);
-        }
-
+        .modal-body { padding: 50px 40px 40px 40px; color: var(--text-color); }
         .modal-body h2 { margin-top: 0; font-size: 2rem; font-weight: 600;}
         .modal-body p { line-height: 1.6; font-size: 1.1rem; color: #444; margin-bottom: 30px; font-weight: 300;}
         .modal-body img, .modal-body video { width: 100%; height: auto; border-radius: 4px; margin-bottom: 20px; display: block;}
@@ -256,24 +283,13 @@
             .nav-right { gap: 15px; }
             .nav-right a { font-size: 0.8rem; }
             
-            .hero-section { 
-                padding-left: 20px; 
-                padding-right: 20px;
-                /* Ensures it perfectly fills mobile browsers */
-                height: 100vh; 
-                height: 100dvh; 
-            }
-            /* Darken the whole mobile video so text is readable everywhere */
+            .hero-section { padding-left: 20px; padding-right: 20px; height: 100vh; height: 100dvh; }
             .hero-tint { background: rgba(0,0,0,0.5); }
             
             .hero-text h1 { font-size: 3rem; }
             .hero-text p { font-size: 1rem; }
 
-            .modal-content { 
-                width: 95%; 
-                max-height: 85vh; 
-                max-height: 85dvh; 
-            }
+            .modal-content { width: 95%; max-height: 85vh; max-height: 85dvh; }
             .modal-body { padding: 70px 20px 20px 20px; } 
         }
     </style>
@@ -282,7 +298,7 @@
     <nav>
         <div class="nav-left"><a href="index.html">Jordan Hilliard</a></div>
         <div class="nav-right">
-            <a href="index.html">Work</a>
+            <a href="#portfolio-main">Work</a>
             <a href="about.html">About</a>
             <a href="mailto:jordanhilliard@gmail.com"><i class="fa-solid fa-envelope"></i></a>
             <a href="https://www.linkedin.com/in/jordan-hilliard-50a4322/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
@@ -294,9 +310,15 @@
             <source src="videos/Jordan_Hilliard_Portfolio.mp4" type="video/mp4">
         </video>
         <div class="hero-tint"></div>
+        <div class="hero-noise"></div>
+        
         <div class="hero-text">
             <h1>Dynamic Art<br>for Inspired Spaces</h1>
             <p>Your art adviser for immersive design, creating site-specific art, bespoke illustrations, and 3D sculptures for hospitality, corporate, and healthcare spaces.</p>
+        </div>
+
+        <div class="scroll-indicator">
+            <i class="fa-solid fa-chevron-down"></i>
         </div>
     </header>
 
