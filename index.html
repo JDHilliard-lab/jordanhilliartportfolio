@@ -14,7 +14,7 @@
         /* GLOBAL RESET & SMOOTH SCROLL */
         html {
             scroll-behavior: smooth;
-            overflow-y: scroll; /* Keeps layout from shifting when navigating */
+            overflow-y: scroll; 
         }
         
         html, body { 
@@ -57,7 +57,7 @@
             color: #ffffff; 
             font-weight: 400;
             font-size: 0.9rem;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
             transition: opacity 0.3s ease;
         }
@@ -96,24 +96,21 @@
             z-index: 2;
         }
 
-/* --- THE SHARP, UN-STRETCHED NOISE FILTER --- */
+        /* --- THE SHARP, UN-STRETCHED NOISE FILTER --- */
         .hero-noise {
             position: absolute;
             top: -50%; left: -50%;
             width: 200%; height: 200%;
             background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-            
-            /* THESE TWO LINES KEEP THE GRAIN TINY AND SHARP */
             background-size: 150px 150px; 
             background-repeat: repeat;
-            
-            opacity: 0.75; 
+            opacity: 0.15; 
             z-index: 3;
             pointer-events: none; 
             mix-blend-mode: overlay; 
             animation: filmGrain 0.4s steps(1) infinite;
         }
-        
+
         @keyframes filmGrain {
             0%, 100% { transform: translate(0, 0); }
             10% { transform: translate(-2%, -2%); }
@@ -127,28 +124,30 @@
             90% { transform: translate(2%, 2%); }
         }
 
+        /* --- THE DESKTOP TYPOGRAPHY (MATCHING SCREENSHOT) --- */
         .hero-text {
             position: relative;
             z-index: 10;
             color: white;
-            max-width: 800px;
+            max-width: 900px;
         }
 
         .hero-text h1 {
-            font-size: 5rem; 
-            font-weight: 200; 
-            line-height: 1.1;
-            margin: 0 0 20px 0;
-            letter-spacing: -2px;
+            font-size: 5.5rem; 
+            font-weight: 200; /* Ultra-thin weight matches the screenshot */
+            line-height: 1.05;
+            margin: 0 0 25px 0;
+            letter-spacing: -1.5px;
         }
 
         .hero-text p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             line-height: 1.6;
             font-weight: 300;
             color: rgba(255, 255, 255, 0.85);
             margin: 0;
-            max-width: 600px;
+            max-width: 550px; /* Constrains the width to match the visual wrap */
+            letter-spacing: 0.5px;
         }
 
         /* --- THE SCROLL INDICATOR --- */
@@ -293,15 +292,10 @@
         .modal-body p { line-height: 1.6; font-size: 1.1rem; color: #444; margin-bottom: 30px; font-weight: 300;}
         .modal-body img, .modal-body video { width: 100%; height: auto; border-radius: 4px; margin-bottom: 20px; display: block;}
 
-        /* RESPONSIVE MOBILE FIXES */
+        /* --- RESPONSIVE MOBILE FIXES --- */
         @media (max-width: 700px) { 
-            /* Pushes everything closer to the screen edges to maximize center space */
             nav { padding: 0 15px; height: 80px; }
-            
-            /* Shrinks text slightly and tightens letter spacing so it takes up less room */
             .nav-left a { font-size: 0.85rem; letter-spacing: 0.5px; }
-            
-            /* Tightens the gap between links, shrinks text, but keeps icons locked at a readable size */
             .nav-right { gap: 12px; }
             .nav-right a { font-size: 0.75rem; }
             .nav-right i { font-size: 1.1rem; } 
@@ -309,16 +303,14 @@
             .hero-section { padding-left: 20px; padding-right: 20px; height: 100vh; height: 100dvh; }
             .hero-tint { background: rgba(0,0,0,0.5); }
             
-            .hero-text h1 { font-size: 3rem; }
+            .hero-text h1 { 
+                font-size: 2.8rem; /* Adjusted for the new line breaks */
+                line-height: 1.1; 
+            }
             .hero-text p { font-size: 1rem; }
 
             .modal-content { width: 95%; max-height: 85vh; max-height: 85dvh; }
             .modal-body { padding: 70px 20px 20px 20px; } 
-            
-            /* Specific fix for About page so we don't break its layout */
-            .about-container { padding: 0 20px; margin: 20px auto 60px auto;}
-            .about-text p:first-of-type { font-size: 1.2rem; }
-            .about-text p { font-size: 1rem; }
         }
     </style>
 </head>
@@ -341,7 +333,7 @@
         <div class="hero-noise"></div>
         
         <div class="hero-text">
-            <h1>Environmental Graphic Design &<br>Spatial Storytelling</h1>
+            <h1>Environmental<br>Graphic Design &<br>Spatial Storytelling</h1>
             <p>Creating artwork, illustration, and sculptural elements for immersive built environments.</p>
         </div>
 
