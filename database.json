@@ -23,6 +23,13 @@
     "role": "Graphic Designer",
     "desc": "My role centered on developing a comprehensive Environmental Graphic Design (EGD) system to unify the workplace environment across corridors, meeting rooms, and other public areas.",
     "folder": "Ford_EGD_Guide"
+
+    },
+  "002_Ford_BuildingSixSculpture.webp": {
+    "title": "Behind The Scenes",
+
+    "desc": "From approved concept to final install: we managed the end-to-end production of these wall sculptures, including rigorous prototype testing and the development of custom, code-compliant mounting hardware for maximum structural security.",
+    "folder": "Ford_DDL_BTS"
   },
   "ey_002.webp": {
     "title": "EY Corporate Pitch",
